@@ -20,14 +20,29 @@ body { margin: 0; background: var(--bg); color: var(--ink);
 .btn:hover { border-color: #cfc7b6; }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
 .btn.ghost { background: transparent; }
-.btn:disabled { opacity: .45; cursor: default; }
 
-main { max-width: 980px; margin: 0 auto; padding: 24px 18px 60px; }
+main { max-width: 1000px; margin: 0 auto; padding: 26px 18px 70px; }
+.tagline { margin: 0 0 14px; font-size: 13px; color: var(--sub); }
+.total { margin-left: 8px; opacity: .8; }
 
-.index { display: flex; flex-direction: column; gap: 14px; margin-bottom: 26px; }
-.idx-group { display: flex; align-items: flex-start; gap: 10px; }
-.group-label { flex: 0 0 40px; padding-top: 9px; font-size: 12px; color: var(--sub); }
-.idx-row { display: flex; flex-wrap: wrap; gap: 6px; }
+/* 홈 */
+.scatter { position: relative; width: 100%; }
+.dot { position: absolute; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1px;
+  border: 1px solid var(--line); border-radius: 50%; background: var(--card);
+  color: var(--ink); font-weight: 700; line-height: 1; cursor: pointer;
+  box-shadow: 0 2px 7px rgba(0,0,0,.06);
+  transition: background .18s, color .18s, box-shadow .18s, scale .18s; }
+.dot em { font-style: normal; font-weight: 400; font-size: 10px; color: var(--sub); }
+.dot:hover { background: var(--accent); border-color: var(--accent); color: #fff;
+  box-shadow: 0 6px 16px rgba(180,85,45,.28); scale: 1.08; z-index: 2; }
+.dot:hover em { color: #ffe0d2; }
+.dot.empty { opacity: .34; box-shadow: none; }
+
+/* 전체보기 */
+.list-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.list-head h2 { margin: 0; font-size: 22px; }
+.index-grid { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 24px; }
 .idx { display: flex; flex-direction: column; align-items: center; width: 46px;
   padding: 7px 0; border: 1px solid var(--line); border-radius: 8px;
   background: var(--card); cursor: pointer; font-weight: 700; }
@@ -35,40 +50,16 @@ main { max-width: 980px; margin: 0 auto; padding: 24px 18px 60px; }
 .idx.empty { opacity: .4; }
 .idx.on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .idx.on em { color: #ffe6d9; }
+.list-title { margin: 0 0 12px; font-size: 18px; }
+.word-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.word-chip { padding: 9px 15px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--card); font-size: 15px; cursor: pointer; }
+.word-chip:hover { border-color: var(--accent); color: var(--accent); }
+.empty-msg { color: var(--sub); margin: 0; }
 
-.board-head { display: flex; flex-wrap: wrap; align-items: center;
-  justify-content: space-between; gap: 10px; }
-.board-head h2 { margin: 0; font-size: 22px; }
-.board-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.sel { font-size: 13px; color: var(--sub); }
-.sel select { margin-left: 4px; padding: 5px; border: 1px solid var(--line);
-  border-radius: 6px; background: var(--card); }
-.hint { color: var(--sub); font-size: 13px; margin: 6px 0 18px; }
-
-.cards { display: grid; gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-.card { perspective: 1000px; }
-.card-inner { position: relative; height: 170px; transition: transform .5s;
-  transform-style: preserve-3d; cursor: pointer; }
-.card.flipped .card-inner { transform: rotateY(180deg); }
-.face { position: absolute; inset: 0; backface-visibility: hidden;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 8px; padding: 18px; text-align: center; background: var(--card);
-  border: 1px solid var(--line); border-radius: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.05); }
-.face.front h3 { margin: 0; font-size: 26px; word-break: keep-all; }
-.face.back { transform: rotateY(180deg); overflow: auto; }
-.meaning { margin: 0; font-size: 17px; font-weight: 600; white-space: pre-wrap; }
-.example { margin: 0; font-size: 13px; color: var(--sub); white-space: pre-wrap; }
-.card footer { display: flex; justify-content: space-between; align-items: center;
-  padding: 7px 4px 0; font-size: 12px; color: var(--sub); }
-.link { border: 0; background: none; color: var(--sub); cursor: pointer;
-  font-size: 12px; text-decoration: underline; padding: 0 4px; }
-.link.danger { color: #b3372f; }
-.empty-msg { color: var(--sub); }
-
-dialog { border: 1px solid var(--line); border-radius: 14px; padding: 24px;
-  width: min(430px, 92vw); background: var(--card); }
+/* 모달 공통 */
+dialog { border: 1px solid var(--line); border-radius: 16px; padding: 22px;
+  width: min(440px, 92vw); background: var(--card); }
 dialog::backdrop { background: rgba(30,26,20,.45); }
 dialog h3 { margin: 0 0 6px; }
 dialog .sub { margin: 0 0 14px; font-size: 13px; color: var(--sub); line-height: 1.55; }
@@ -79,3 +70,30 @@ dialog input, dialog textarea { width: 100%; margin-top: 5px; padding: 9px;
   background: #fff; resize: vertical; }
 .row-end { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
 .err { color: #b3372f; font-size: 13px; min-height: 18px; margin: 0 0 6px; }
+
+/* 단어 보기 모달 */
+.v-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.v-letter { width: 30px; height: 30px; border-radius: 50%; background: var(--accent);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; }
+.v-count { font-size: 12px; color: var(--sub); }
+.x-btn { margin-left: auto; border: 0; background: none; font-size: 22px;
+  line-height: 1; color: var(--sub); cursor: pointer; }
+.v-word { margin: 10px 0 14px; font-size: 30px; text-align: center;
+  word-break: keep-all; }
+.btn.reveal { display: block; margin: 0 auto 6px; }
+.v-body { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 14px; }
+.v-meaning { margin: 0 0 8px; font-size: 17px; font-weight: 600; white-space: pre-wrap; }
+.v-example { margin: 0; font-size: 14px; color: var(--sub); white-space: pre-wrap; }
+.v-foot { display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-top: 18px; font-size: 12px; color: var(--sub); }
+.v-right { display: flex; align-items: center; gap: 8px; }
+.link { border: 0; background: none; color: var(--sub); cursor: pointer;
+  font-size: 12px; text-decoration: underline; padding: 0 3px; }
+.link.danger { color: #b3372f; }
+.v-empty { text-align: center; color: var(--sub); line-height: 2.2; margin: 18px 0 6px; }
+
+@media (max-width: 520px) {
+  .v-word { font-size: 25px; }
+  .topbar { padding: 12px 14px; }
+}
