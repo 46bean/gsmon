@@ -1,6 +1,6 @@
 :root {
-  --bg: #f6f4ef; --ink: #2c2a26; --sub: #7b7568;
-  --line: #e2ddd2; --accent: #b4552d; --card: #fffdf8;
+  --bg: #ffffff; --ink: #2c2a26; --sub: #4d4d4d;
+  --line: #2a7a47; --accent: #6bbffa; --card: #e8fffa;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink);
