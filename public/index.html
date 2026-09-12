@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>gsmon — 단어 플래시카드</title>
-<meta name="description" content="방문자가 함께 만드는 단어 플래시카드 모음" />
+<title>구습몬 — 𖠌</title>
+<meta name="description" content="#구문습득하는몬스터" />
 <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
@@ -35,10 +35,10 @@
             <option value="recent">최신순</option>
           </select>
         </label>
-        <button id="btn-shuffle" class="btn" disabled>다시 뽑기</button>
+        <button id="btn-shuffle" class="btn" disabled>다시 고르기</button>
       </div>
     </div>
-    <p class="hint">카드를 클릭하면 뜻이 보입니다.</p>
+    <p class="hint">카드를 클릭해 보세요.</p>
     <div id="cards" class="cards"></div>
   </section>
 </main>
@@ -46,8 +46,8 @@
 <dialog id="dlg-nick">
   <form method="dialog" id="form-nick">
     <h3>닉네임 설정</h3>
-    <p class="sub">이 닉네임이 아이디 역할을 합니다. 닉네임에 <code>admin</code>이 들어가면 관리자 모드가 되어 모든 카드를 수정·삭제할 수 있습니다.</p>
-    <input id="nick-input" maxlength="20" placeholder="예: 초코우유" required autocomplete="off" />
+    <p class="sub">여기서 설정한 닉네임이 아이디 역할을 합니다.</p>
+    <input id="nick-input" maxlength="20" placeholder="예: 오드존예" required autocomplete="off" />
     <div class="row-end">
       <button class="btn primary" value="ok">시작하기</button>
     </div>
@@ -56,7 +56,7 @@
 
 <dialog id="dlg-card">
   <form id="form-card">
-    <h3 id="card-form-title">단어 카드 작성</h3>
+    <h3 id="card-form-title">구습몬 쓰기</h3>
     <input type="hidden" id="card-id" />
     <label>단어 <input id="f-word" maxlength="60" required autocomplete="off" /></label>
     <label>뜻 <textarea id="f-meaning" maxlength="500" rows="3" required></textarea></label>
