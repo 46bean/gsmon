@@ -1,7 +1,7 @@
 /* ---------- 기본 ---------- */
-const CHO   = ['ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
-const ALPHA = [...'ABCDEFGHIJKLMONPQRSTUVXYZ'];
-const LETTERS = [...CHO, ...ALPHA, '#'];   // 내림차순. 오름차순으로 바꾸려면 .reverse() 추가
+const CHO   = ['ㅎ','ㅍ','ㅌ','ㅋ','ㅊ','ㅈ','ㅇ','ㅅ','ㅂ','ㅁ','ㄹ','ㄷ','ㄴ','ㄱ'];
+const ALPHA = [...'ZYXWVUTSRQPONMLKJIHGFEDCBA'];
+const LETTERS.reverse() = [...CHO, ...ALPHA, '#'];   // 내림차순. 오름차순으로 바꾸려면 .reverse() 추가
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
@@ -59,7 +59,7 @@ async function loadStats() {
   if (state.view === 'scatter') layoutScatter(); else renderIndexGrid();
 }
 
-/* ---------- 홈 ---------- */
+/* ---------- 홈: 흩뿌린 인덱스 ---------- */
 function layoutScatter() {
   const host = $('#scatter');
   const W = host.clientWidth;
@@ -126,7 +126,7 @@ async function loadWordList() {
   state.list = (await r.json()).cards || [];
   $('#word-list').innerHTML = state.list.length
     ? state.list.map((c) => `<button class="word-chip" data-id="${c.id}">${esc(c.word)}</button>`).join('')
-    : `<p class="empty-msg">이 글자에 연결된 단어가 없어요. '글쓰기'로 단어를 추가해 보세요.</p>`;
+    : `<p class="empty-msg">이 글자에는 아직 단어가 없어요. '글쓰기'로 첫 단어를 만들어 보세요.</p>`;
 }
 
 $('#word-list').addEventListener('click', (e) => {
