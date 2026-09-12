@@ -1,0 +1,81 @@
+:root {
+  --bg: #f6f4ef; --ink: #2c2a26; --sub: #7b7568;
+  --line: #e2ddd2; --accent: #b4552d; --card: #fffdf8;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font-family: system-ui, "Pretendard", "Apple SD Gothic Neo", sans-serif; }
+
+.topbar { display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 14px 22px; background: var(--card);
+  border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+.logo { margin: 0; font-size: 20px; letter-spacing: .06em; }
+.user { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.chip { padding: 5px 12px; border-radius: 999px; background: #efece3;
+  font-size: 13px; color: var(--sub); }
+.chip.admin { background: #fbe6dc; color: var(--accent); font-weight: 600; }
+
+.btn { border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  padding: 7px 14px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+.btn:hover { border-color: #cfc7b6; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: .45; cursor: default; }
+
+main { max-width: 980px; margin: 0 auto; padding: 24px 18px 60px; }
+
+.index { display: flex; flex-direction: column; gap: 14px; margin-bottom: 26px; }
+.idx-group { display: flex; align-items: flex-start; gap: 10px; }
+.group-label { flex: 0 0 40px; padding-top: 9px; font-size: 12px; color: var(--sub); }
+.idx-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.idx { display: flex; flex-direction: column; align-items: center; width: 46px;
+  padding: 7px 0; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--card); cursor: pointer; font-weight: 700; }
+.idx em { font-style: normal; font-size: 11px; font-weight: 400; color: var(--sub); }
+.idx.empty { opacity: .4; }
+.idx.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.idx.on em { color: #ffe6d9; }
+
+.board-head { display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 10px; }
+.board-head h2 { margin: 0; font-size: 22px; }
+.board-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sel { font-size: 13px; color: var(--sub); }
+.sel select { margin-left: 4px; padding: 5px; border: 1px solid var(--line);
+  border-radius: 6px; background: var(--card); }
+.hint { color: var(--sub); font-size: 13px; margin: 6px 0 18px; }
+
+.cards { display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.card { perspective: 1000px; }
+.card-inner { position: relative; height: 170px; transition: transform .5s;
+  transform-style: preserve-3d; cursor: pointer; }
+.card.flipped .card-inner { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 18px; text-align: center; background: var(--card);
+  border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.05); }
+.face.front h3 { margin: 0; font-size: 26px; word-break: keep-all; }
+.face.back { transform: rotateY(180deg); overflow: auto; }
+.meaning { margin: 0; font-size: 17px; font-weight: 600; white-space: pre-wrap; }
+.example { margin: 0; font-size: 13px; color: var(--sub); white-space: pre-wrap; }
+.card footer { display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 4px 0; font-size: 12px; color: var(--sub); }
+.link { border: 0; background: none; color: var(--sub); cursor: pointer;
+  font-size: 12px; text-decoration: underline; padding: 0 4px; }
+.link.danger { color: #b3372f; }
+.empty-msg { color: var(--sub); }
+
+dialog { border: 1px solid var(--line); border-radius: 14px; padding: 24px;
+  width: min(430px, 92vw); background: var(--card); }
+dialog::backdrop { background: rgba(30,26,20,.45); }
+dialog h3 { margin: 0 0 6px; }
+dialog .sub { margin: 0 0 14px; font-size: 13px; color: var(--sub); line-height: 1.55; }
+dialog code { background: #efece3; padding: 1px 5px; border-radius: 4px; }
+dialog label { display: block; margin-bottom: 12px; font-size: 13px; color: var(--sub); }
+dialog input, dialog textarea { width: 100%; margin-top: 5px; padding: 9px;
+  border: 1px solid var(--line); border-radius: 8px; font: inherit;
+  background: #fff; resize: vertical; }
+.row-end { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+.err { color: #b3372f; font-size: 13px; min-height: 18px; margin: 0 0 6px; }

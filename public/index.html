@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>gsmon — 단어 플래시카드</title>
+<meta name="description" content="방문자가 함께 만드는 단어 플래시카드 모음" />
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <h1 class="logo">gsmon</h1>
+  <div class="user">
+    <span id="who" class="chip"></span>
+    <button id="btn-write" class="btn primary">글쓰기</button>
+    <button id="btn-nick" class="btn ghost">닉네임 변경</button>
+  </div>
+</header>
+
+<main>
+  <nav id="index" class="index" aria-label="인덱스"></nav>
+
+  <section class="board">
+    <div class="board-head">
+      <h2 id="board-title">인덱스를 선택하세요</h2>
+      <div class="board-actions">
+        <label class="sel">개수
+          <select id="limit">
+            <option>1</option><option selected>3</option><option>5</option><option>10</option>
+          </select>
+        </label>
+        <label class="sel">정렬
+          <select id="mode">
+            <option value="random" selected>랜덤</option>
+            <option value="recent">최신순</option>
+          </select>
+        </label>
+        <button id="btn-shuffle" class="btn" disabled>다시 뽑기</button>
+      </div>
+    </div>
+    <p class="hint">카드를 클릭하면 뜻이 보입니다.</p>
+    <div id="cards" class="cards"></div>
+  </section>
+</main>
+
+<dialog id="dlg-nick">
+  <form method="dialog" id="form-nick">
+    <h3>닉네임 설정</h3>
+    <p class="sub">이 닉네임이 아이디 역할을 합니다. 닉네임에 <code>admin</code>이 들어가면 관리자 모드가 되어 모든 카드를 수정·삭제할 수 있습니다.</p>
+    <input id="nick-input" maxlength="20" placeholder="예: 초코우유" required autocomplete="off" />
+    <div class="row-end">
+      <button class="btn primary" value="ok">시작하기</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlg-card">
+  <form id="form-card">
+    <h3 id="card-form-title">단어 카드 작성</h3>
+    <input type="hidden" id="card-id" />
+    <label>단어 <input id="f-word" maxlength="60" required autocomplete="off" /></label>
+    <label>뜻 <textarea id="f-meaning" maxlength="500" rows="3" required></textarea></label>
+    <label>예문 (선택) <textarea id="f-example" maxlength="500" rows="3"></textarea></label>
+    <p id="form-error" class="err"></p>
+    <div class="row-end">
+      <button type="button" class="btn ghost" id="card-cancel">취소</button>
+      <button type="submit" class="btn primary">저장</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="/app.js"></script>
+</body>
+</html>
