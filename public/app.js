@@ -1,7 +1,7 @@
 /* ---------- 기본 ---------- */
 const CHO   = ['ㅎ','ㅍ','ㅌ','ㅋ','ㅊ','ㅈ','ㅇ','ㅅ','ㅂ','ㅁ','ㄹ','ㄷ','ㄴ','ㄱ'];
 const ALPHA = [...'ZYXWVUTSRQPONMLKJIHGFEDCBA'];
-const LETTERS.reverse() = [...CHO, ...ALPHA, '#'];   // 내림차순. 오름차순으로 바꾸려면 .reverse() 추가
+const LETTERS = [...CHO, ...ALPHA, '#'].reverse();   // 내림차순. 오름차순으로 바꾸려면 .reverse() 추가
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
