@@ -3,14 +3,20 @@ import { letterOf, json, oneLine, block } from '../../lib/utils.js';
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   const letter = url.searchParams.get('letter') || '';
-  const mode = url.searchParams.get('mode') === 'recent' ? 'recent' : 'random';
-  const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '3', 10) || 3, 1), 20);
-  const order = mode === 'recent' ? 'created_at DESC, id DESC' : 'RANDOM()';
+  const modeParam = url.searchParams.get('mode');
+  const mode = ['recent', 'word', 'random'].includes(modeParam) ? modeParam : 'random';
+  const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '50', 10) || 50, 1), 300);
+
+  const ORDER = {
+    random: 'RANDOM()',
+    recent: 'created_at DESC, id DESC',
+    word: 'word COLLATE NOCASE ASC, id ASC',
+  };
   const all = !letter || letter === 'ALL';
 
   const sql = all
-    ? `SELECT * FROM cards ORDER BY ${order} LIMIT ?`
-    : `SELECT * FROM cards WHERE letter = ? ORDER BY ${order} LIMIT ?`;
+    ? `SELECT * FROM cards ORDER BY ${ORDER[mode]} LIMIT ?`
+    : `SELECT * FROM cards WHERE letter = ? ORDER BY ${ORDER[mode]} LIMIT ?`;
 
   const stmt = all
     ? env.DB.prepare(sql).bind(limit)
