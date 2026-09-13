@@ -43,6 +43,8 @@
     <h3>닉네임 설정</h3>
     <p class="sub">여기서 설정한 닉네임이 아이디 역할을 합니다.</p>
     <input id="nick-input" maxlength="20" placeholder="오드존예" required autocomplete="off" />
+    <p class="sub" style="margin:12px 0 0">표시될 작성자 이름 <span class="opt">(선택)</span></p>
+    <input id="name-input" maxlength="30" placeholder="비워두면 닉네임으로 표시됩니다" autocomplete="off" />
     <div class="row-end"><button class="btn primary" value="ok">시작하기</button></div>
   </form>
 </dialog>
@@ -63,11 +65,24 @@
   <div id="v-main">
     <h3 id="v-word" class="v-word"></h3>
     <button id="v-reveal" class="btn reveal">등장배경</button>
+
     <div id="v-body" class="v-body" hidden>
       <p id="v-meaning" class="v-meaning"></p>
       <p id="v-nobg" class="v-nobg" hidden>작성된 내용이 없습니다.</p>
-      <img id="v-image" class="v-image" alt="첨부 사진" hidden />
+      <img id="v-image" class="v-image" alt="" hidden />
+
+      <div id="v-notes" class="v-notes"></div>
+
+      <div class="note-add">
+        <textarea id="note-input" maxlength="500" rows="2"
+          placeholder="등장배경을 덧붙여 주세요."></textarea>
+        <div class="note-add-foot">
+          <span id="note-error" class="err-inline"></span>
+          <button type="button" id="note-submit" class="btn">배경 추가</button>
+        </div>
+      </div>
     </div>
+
     <footer class="v-foot">
       <span id="v-author" class="v-author"></span>
       <span class="v-right">
@@ -85,6 +100,10 @@
     <input type="hidden" id="card-id" />
 
     <label>단어 <input id="f-word" maxlength="150" required autocomplete="off" /></label>
+
+    <label>작성자 이름 <span class="opt">(선택)</span>
+      <input id="f-name" maxlength="30" placeholder="비워두면 닉네임으로 표시됩니다" autocomplete="off" />
+    </label>
 
     <label>등장배경 <span class="opt">(선택)</span>
       <textarea id="f-meaning" maxlength="500" rows="4"
