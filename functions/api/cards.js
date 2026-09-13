@@ -45,7 +45,7 @@ export async function onRequestPost({ request, env }) {
   try { body = await request.json(); } catch { return json({ error: '잘못된 요청입니다.' }, 400); }
 
   const nickname = oneLine(body.nickname, 20);
-  const word = oneLine(body.word, 60);
+  const word = oneLine(body.word, 150);
   const meaning = block(body.meaning, 500);
   const image = safeImage(body.image);
 
