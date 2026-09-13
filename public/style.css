@@ -1,18 +1,30 @@
+# 설치된 폰트 #
+
+.ibm-plex-sans-<uniquifier> {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+
 :root {
   --bg: #f6f4ef; --ink: #2c2a26; --sub: #7b7568;
   --line: #e2ddd2; --accent: #b4552d; --card: #fffdf8;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink);
-  font-family: "Pretendard", "Apple SD Gothic Neo", sans-serif; }
+  font-family: "IBM Plex Sans", "Pretendard", "Apple SD Gothic Neo", sans-serif; }
 
-.topbar { display: flex; align-items: center; justify-content: space-between;
+.topbar { display: flex; align-items: baseline; justify-content: space-between;
   gap: 12px; padding: 14px 22px; background: var(--card);
   border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
-.logo { margin: 0; font-size: 20px; letter-spacing: .06em; }
+.logo { margin: 0; font-size: 18px; letter-spacing: .06em; }
 .user { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .chip { padding: 5px 12px; border-radius: 999px; background: #efece3;
-  font-size: 13px; color: var(--sub); }
+  font-size: 11px; color: var(--sub); }
 .chip.admin { background: #fbe6dc; color: var(--accent); font-weight: 600; }
 
 .btn { border: 1px solid var(--line); background: var(--card); color: var(--ink);
