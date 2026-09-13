@@ -16,9 +16,7 @@ export async function onRequestGet({ request, env }) {
   const modeParam = url.searchParams.get('mode');
   const mode = ['recent', 'word', 'random'].includes(modeParam) ? modeParam : 'random';
   const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '50', 10) || 50, 1), 300);
-  const cols = light
-    ? 'id, word, meaning, letter, author, display_name, created_at, (image != \'\') AS has_image'
-    : '*';
+  const light = url.searchParams.get('light') === '1';
 
   const ORDER = {
     random: 'RANDOM()',
@@ -26,8 +24,9 @@ export async function onRequestGet({ request, env }) {
     word: 'word COLLATE NOCASE ASC, id ASC',
   };
   const all = !letter || letter === 'ALL';
+
   const cols = light
-    ? 'id, word, meaning, letter, author, created_at, (image != \'\') AS has_image'
+    ? 'id, word, meaning, letter, author, display_name, created_at, (image != \'\') AS has_image'
     : '*';
 
   const sql = all
@@ -62,6 +61,4 @@ export async function onRequestPost({ request, env }) {
   ).bind(word, meaning, image, letterOf(word), nickname, displayName).first();
 
   return json({ card }, 201);
-}
-
 }
