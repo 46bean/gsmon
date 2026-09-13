@@ -26,7 +26,7 @@ export async function onRequestPut({ request, env, params }) {
     return json({ error: '본인이 작성한 카드만 수정할 수 있습니다.' }, 403);
   }
 
-  const word = oneLine(body.word, 60) || card.word;
+  const word = oneLine(body.word, 150) || card.word;
   const meaning = block(body.meaning, 500);
 
   // 새 사진이 오면 교체, 삭제 요청이면 비움, 둘 다 아니면 유지
