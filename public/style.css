@@ -133,3 +133,19 @@ dialog input[type="file"] { padding: 7px; font-size: 13px; background: #fff; }
   .topbar { padding: 12px 14px; }
   dialog { padding: 18px; }
 }
+
+
+/* 덧붙인 등장배경 */
+.v-notes { margin-top: 4px; }
+.note { border-top: 1px dashed var(--line); padding: 11px 0 9px; }
+.note-body { margin: 0 0 5px; font-size: 15px; line-height: 1.6;
+  white-space: pre-wrap; overflow-wrap: break-word; }
+.note-foot { display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; font-size: 11px; color: var(--sub); }
+.note-add { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.note-add textarea { display: block; width: 100%; padding: 9px; font: inherit;
+  font-size: 14px; border: 1px solid var(--line); border-radius: 8px;
+  background: #fff; resize: vertical; }
+.note-add-foot { display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-top: 7px; }
+.err-inline { font-size: 12px; color: #b3372f; }
