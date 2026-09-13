@@ -16,7 +16,9 @@ export async function onRequestGet({ request, env }) {
   const modeParam = url.searchParams.get('mode');
   const mode = ['recent', 'word', 'random'].includes(modeParam) ? modeParam : 'random';
   const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '50', 10) || 50, 1), 300);
-  const light = url.searchParams.get('light') === '1';
+  const cols = light
+    ? 'id, word, meaning, letter, author, display_name, created_at, (image != \'\') AS has_image'
+    : '*';
 
   const ORDER = {
     random: 'RANDOM()',
@@ -45,6 +47,7 @@ export async function onRequestPost({ request, env }) {
   try { body = await request.json(); } catch { return json({ error: '잘못된 요청입니다.' }, 400); }
 
   const nickname = oneLine(body.nickname, 20);
+  const displayName = oneLine(body.displayName, 30);
   const word = oneLine(body.word, 150);
   const meaning = block(body.meaning, 500);
   const image = safeImage(body.image);
@@ -54,9 +57,11 @@ export async function onRequestPost({ request, env }) {
   if (image === null) return json({ error: '사진 형식이 올바르지 않거나 용량이 너무 큽니다.' }, 400);
 
   const card = await env.DB.prepare(
-    `INSERT INTO cards (word, meaning, example, image, letter, author)
-     VALUES (?, ?, '', ?, ?, ?) RETURNING *`
-  ).bind(word, meaning, image, letterOf(word), nickname).first();
+    `INSERT INTO cards (word, meaning, example, image, letter, author, display_name)
+     VALUES (?, ?, '', ?, ?, ?, ?) RETURNING *`
+  ).bind(word, meaning, image, letterOf(word), nickname, displayName).first();
 
   return json({ card }, 201);
+}
+
 }
