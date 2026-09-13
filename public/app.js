@@ -17,46 +17,47 @@ function shuffle(arr) {
 }
 
 const state = {
-  nickname: '', admin: false,
+  nickname: '', myName: '', admin: false,
   view: 'scatter',
   counts: {}, total: 0,
   letter: null, list: [],
   deck: [], deckIdx: 0, single: false,
+  notes: [],
   order: shuffle(LETTERS),
 };
 
-/* ---------- 닉네임 ---------- */
-function applyNickname(name) {
+/* ---------- 닉네임 / 이름 ---------- */
+function applyIdentity(name, display) {
   state.nickname = name;
+  state.myName = display || '';
   state.admin = name.toLowerCase().includes('admin');
   localStorage.setItem('gsmon_nickname', name);
-  $('#who').textContent = state.admin ? `${name} (관리자)` : name;
+  localStorage.setItem('gsmon_myname', state.myName);
+  const shown = state.myName ? `${state.myName} (${name})` : name;
+  $('#who').textContent = state.admin ? `${shown} · 관리자` : shown;
   $('#who').classList.toggle('admin', state.admin);
 }
 
 const dlgNick = $('#dlg-nick');
 dlgNick.addEventListener('cancel', (e) => { if (!state.nickname) e.preventDefault(); });
-function askNickname() { $('#nick-input').value = state.nickname; dlgNick.showModal(); }
+
+function askNickname() {
+  $('#nick-input').value = state.nickname;
+  $('#name-input').value = state.myName;
+  dlgNick.showModal();
+}
 
 $('#form-nick').addEventListener('submit', () => {
   const v = $('#nick-input').value.trim().slice(0, 20);
   if (!v) return;
-  applyNickname(v);
-  if (!$('#dlg-view').open) return;
-  renderDeck();
-    const img = $('#v-image');
-  if (c.image) {
-    img.src = c.image;
-    img.hidden = false;
-  } else {
-    img.removeAttribute('src');
-    img.alt = '';
-    img.hidden = true;
-  }
+  applyIdentity(v, $('#name-input').value.trim().slice(0, 30));
+  if ($('#dlg-view').open && state.deck.length) renderDeck();
 });
 
 const mine = (author) =>
   state.admin || (!!state.nickname && state.nickname.toLowerCase() === String(author).toLowerCase());
+
+const nameOf = (o) => (o.display_name && o.display_name.trim()) || o.author;
 
 /* ---------- 통계 ---------- */
 async function loadStats() {
@@ -195,30 +196,96 @@ function renderDeck() {
   const hasBg = !!(c.meaning && c.meaning.trim());
   $('#v-meaning').textContent = hasBg ? c.meaning : '';
   $('#v-meaning').hidden = !hasBg;
-  $('#v-nobg').hidden = hasBg || !!c.image;
 
   const img = $('#v-image');
   if (c.image) { img.src = c.image; img.hidden = false; }
-  else { img.removeAttribute('src'); img.hidden = true; }
+  else { img.removeAttribute('src'); img.alt = ''; img.hidden = true; }
 
-  $('#v-author').textContent = `by ${c.author}`;
+  $('#v-author').textContent = `by ${nameOf(c)}`;
   $('#v-body').hidden = !state.single;
   $('#v-reveal').hidden = state.single;
   $('#v-next').hidden = state.single || state.deck.length < 2;
   $('#v-tools').innerHTML = mine(c.author)
     ? `<button class="link" data-act="edit">수정</button>
        <button class="link danger" data-act="del">삭제</button>` : '';
+
+  $('#note-input').value = '';
+  $('#note-error').textContent = '';
+  state.notes = [];
+  renderNotes(hasBg, !!c.image);
+  if (state.single) loadNotes(c.id);
+}
+
+function renderNotes(hasBg, hasImg) {
+  const host = $('#v-notes');
+  host.innerHTML = state.notes.map((n) => `
+    <div class="note">
+      <p class="note-body">${esc(n.body)}</p>
+      <div class="note-foot">
+        <span>${esc(nameOf(n))}</span>
+        ${mine(n.author) ? `<button class="link danger" data-note="${n.id}">삭제</button>` : ''}
+      </div>
+    </div>`).join('');
+  $('#v-nobg').hidden = hasBg || hasImg || state.notes.length > 0;
+}
+
+async function loadNotes(cardId) {
+  const r = await fetch(`/api/notes?card_id=${cardId}`);
+  state.notes = (await r.json()).notes || [];
+  const c = state.deck[state.deckIdx];
+  renderNotes(!!(c.meaning && c.meaning.trim()), !!c.image);
 }
 
 $('#v-reveal').addEventListener('click', () => {
   $('#v-body').hidden = false;
   $('#v-reveal').hidden = true;
+  const c = state.deck[state.deckIdx];
+  if (c) loadNotes(c.id);
 });
 
 $('#v-next').addEventListener('click', () => {
   state.deckIdx = (state.deckIdx + 1) % state.deck.length;
   renderDeck();
 });
+
+$('#note-submit').addEventListener('click', async () => {
+  const c = state.deck[state.deckIdx];
+  const text = $('#note-input').value.trim();
+  if (!c) return;
+  if (!text) { $('#note-error').textContent = '내용을 입력해 주세요.'; return; }
+
+  $('#note-submit').disabled = true;
+  try {
+    const r = await fetch('/api/notes', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        cardId: c.id, body: text,
+        nickname: state.nickname, displayName: state.myName,
+      }),
+    });
+    const data = await r.json();
+    if (!r.ok) { $('#note-error').textContent = data.error || '추가에 실패했습니다.'; return; }
+    $('#note-input').value = '';
+    $('#note-error').textContent = '';
+    await loadNotes(c.id);
+  } catch {
+    $('#note-error').textContent = '문제가 생겼습니다. 다시 시도해 주세요.';
+  } finally {
+    $('#note-submit').disabled = false;
+  }
+});
+
+$('#v-notes').addEventListener('click', async (e) => {
+  const id = e.target.dataset.note;
+  if (!id) return;
+  if (!confirm('이 배경을 삭제할까요?')) return;
+  const r = await fetch(`/api/notes?id=${id}&nickname=${encodeURIComponent(state.nickname)}`,
+    { method: 'DELETE' });
+  if (!r.ok) { alert((await r.json()).error); return; }
+  await loadNotes(state.deck[state.deckIdx].id);
+});
+
 
 $('#v-close').addEventListener('click', () => dlgView.close());
 $('#v-empty-write').addEventListener('click', () => { dlgView.close(); openForm(null); });
@@ -257,9 +324,10 @@ function setPreview(src) {
 }
 
 function openForm(card) {
-  $('#card-form-title').textContent = card ? '카드 수정' : '단어 카드 작성';
+  $('#card-form-title').textContent = card ? '카드 수정' : '작성';
   $('#card-id').value = card ? card.id : '';
   $('#f-word').value = card ? card.word : '';
+  $('#f-name').value = card ? (card.display_name || '') : state.myName;
   $('#f-meaning').value = card ? (card.meaning || '') : '';
   $('#f-image').value = '';
   $('#img-status').textContent = '';
@@ -337,9 +405,11 @@ $('#form-card').addEventListener('submit', async (e) => {
   const id = $('#card-id').value;
   const payload = {
     nickname: state.nickname,
+    displayName: $('#f-name').value,
     word: $('#f-word').value,
     meaning: $('#f-meaning').value,
   };
+  
   if (pendingImage) payload.image = pendingImage;
   if (removeImage && !pendingImage) payload.removeImage = true;
 
@@ -368,7 +438,8 @@ $('#form-card').addEventListener('submit', async (e) => {
 /* ---------- 시작 ---------- */
 (function init() {
   const saved = localStorage.getItem('gsmon_nickname');
-  if (saved) applyNickname(saved); else askNickname();
+  const savedName = localStorage.getItem('gsmon_myname') || '';
+  if (saved) applyIdentity(saved, savedName); else askNickname();
   switchView('scatter');
   loadStats();
 })();
