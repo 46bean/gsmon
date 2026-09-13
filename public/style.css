@@ -15,6 +15,7 @@
   --line: #e2ddd2; --accent: #b4552d; --card: #fffdf8;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--ink);
   font-family: "IBM Plex Sans", "Pretendard", "Apple SD Gothic Neo", sans-serif; }
 
