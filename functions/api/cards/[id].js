@@ -28,6 +28,7 @@ export async function onRequestPut({ request, env, params }) {
 
   const word = oneLine(body.word, 150) || card.word;
   const meaning = block(body.meaning, 500);
+  const displayName = oneLine(body.displayName, 30);
 
   // 새 사진이 오면 교체, 삭제 요청이면 비움, 둘 다 아니면 유지
   let image = card.image || '';
@@ -39,9 +40,10 @@ export async function onRequestPut({ request, env, params }) {
   }
 
   const updated = await env.DB.prepare(
-    `UPDATE cards SET word = ?, meaning = ?, image = ?, letter = ?, updated_at = datetime('now')
+    `UPDATE cards SET word = ?, meaning = ?, image = ?, letter = ?, display_name = ?,
+            updated_at = datetime('now')
      WHERE id = ? RETURNING *`
-  ).bind(word, meaning, image, letterOf(word), params.id).first();
+  ).bind(word, meaning, image, letterOf(word), displayName, params.id).first();
 
   return json({ card: updated });
 }
@@ -56,6 +58,7 @@ export async function onRequestDelete({ request, env, params }) {
     return json({ error: '본인이 작성한 카드만 삭제할 수 있습니다.' }, 403);
   }
 
+  await env.DB.prepare('DELETE FROM notes WHERE card_id = ?').bind(params.id).run();
   await env.DB.prepare('DELETE FROM cards WHERE id = ?').bind(params.id).run();
   return json({ ok: true });
 }
