@@ -44,6 +44,15 @@ $('#form-nick').addEventListener('submit', () => {
   applyNickname(v);
   if (!$('#dlg-view').open) return;
   renderDeck();
+    const img = $('#v-image');
+  if (c.image) {
+    img.src = c.image;
+    img.hidden = false;
+  } else {
+    img.removeAttribute('src');
+    img.alt = '';
+    img.hidden = true;
+  }
 });
 
 const mine = (author) =>
